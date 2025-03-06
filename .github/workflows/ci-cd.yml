@@ -1,0 +1,91 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - ci-cd-pipeline
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.19'
+    
+    - name: Run tests
+      run: go test -v -coverprofile=coverage.out ./...
+    
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        file: coverage.out
+        flags: unittests
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.19'
+    
+    - name: Build
+      run: |
+        GOOS=$(echo ${{ matrix.os }} | cut -d'-' -f1)
+        GOARCH=amd64
+        OUTPUT=aicraft-cli-${{ matrix.os }}-alpha
+        go build -o $OUTPUT .
+        echo "OUTPUT_FILE=$OUTPUT" >> $GITHUB_ENV
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: aicraft-cli-${{ matrix.os }}-alpha
+        path: ${{ env.OUTPUT_FILE }}
+
+  release:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        path: artifacts
+    
+    - name: Create release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: alpha-${{ github.sha }}
+        release_name: Alpha Release ${{ github.sha }}
+        draft: false
+        prerelease: true
+    
+    - name: Upload release assets
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: artifacts/aicraft-cli-ubuntu-latest-alpha
+        asset_name: aicraft-cli-linux-alpha
+        asset_content_type: application/octet-stream
