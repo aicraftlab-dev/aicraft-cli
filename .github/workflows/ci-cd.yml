@@ -72,23 +72,13 @@ jobs:
         pattern: aicraft-cli-*-alpha
         merge-multiple: true
     
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create release and upload assets
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: alpha-${{ github.sha }}
-        release_name: Alpha Release ${{ github.sha }}
-        draft: false
+        name: Alpha Release ${{ github.sha }}
         prerelease: true
-    
-    - name: Upload release assets
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: artifacts/aicraft-cli-ubuntu-latest-alpha
-        asset_name: aicraft-cli-linux-alpha
-        asset_content_type: application/octet-stream
+        files: |
+          artifacts/aicraft-cli-ubuntu-latest-alpha
+          artifacts/aicraft-cli-windows-latest-alpha
+          artifacts/aicraft-cli-macos-latest-alpha
