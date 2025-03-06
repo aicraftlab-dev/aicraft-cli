@@ -10,8 +10,8 @@ func TestRootCommand(t *testing.T) {
     rootCmd := &cobra.Command{}
     InitRootCmd(rootCmd)
 
-    if len(rootCmd.Commands()) != 3 {
-        t.Errorf("Expected 3 commands, got %d", len(rootCmd.Commands()))
+    if len(rootCmd.Commands()) != 4 {
+        t.Errorf("Expected 4 commands, got %d", len(rootCmd.Commands()))
     }
 }
 
