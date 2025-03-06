@@ -52,10 +52,11 @@ jobs:
         echo "OUTPUT_FILE=$OUTPUT" >> $GITHUB_ENV
     
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: aicraft-cli-${{ matrix.os }}-alpha
         path: ${{ env.OUTPUT_FILE }}
+        retention-days: 5
 
   release:
     needs: build
