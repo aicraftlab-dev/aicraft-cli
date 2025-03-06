@@ -53,6 +53,33 @@ aicraft web search "Python async best practices" --engine google
 ```
 
 ## Configuration
+
+### Managing AI Providers
+Set up AI providers using the config command:
+```bash
+aicraft config setup --provider deepseek --api-key YOUR_API_KEY
+```
+
+### Configuration File
+The configuration is stored in `~/.aicraft/config.yaml`:
+```yaml
+ai:
+  providers:
+    deepseek:
+      api_key: YOUR_API_KEY
+      model: deepseek-chat
+  default_model: ollama:llama2
+sandbox:
+  timeout: 10s
+search:
+  default_engine: duckduckgo
+```
+
+### Environment Variables
+You can override configuration using environment variables:
+- `AICRAFT_AI_DEFAULT_MODEL`
+- `AICRAFT_SANDBOX_TIMEOUT`
+- `AICRAFT_SEARCH_DEFAULT_ENGINE`
 Create a config file at `~/.aicraft/config.yaml`:
 ```yaml
 ai:
