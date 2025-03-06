@@ -1,5 +1,7 @@
 # AICraft CLI
 
+[![codecov](https://codecov.io/gh/aicraftlab-dev/aicraft-cli/branch/main/graph/badge.svg?token=YOUR_CODECOV_TOKEN)](https://codecov.io/gh/aicraftlab-dev/aicraft-cli)
+
 AICraft CLI is a powerful command-line interface for AI-augmented workflows, providing unified access to AI models, code execution, and web intelligence.
 
 ## Installation
