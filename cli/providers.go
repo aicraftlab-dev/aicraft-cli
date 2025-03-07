@@ -5,19 +5,8 @@ import (
     "strings"
 )
 
-type ProviderConfig struct {
-    APIKey string
-    Model  string
-}
-
-type LLMProvider struct {
-    Name    string
-    Setup   func() error
-    Connect func() error
-}
-
-var providers = map[string]LLMProvider{
-    "deepseek": {
+func init() {
+    providers["deepseek"] = LLMProvider{
         Name: "Deepseek",
         Setup: func() error {
             fmt.Println("Please create a Deepseek API account at:")
@@ -47,8 +36,9 @@ var providers = map[string]LLMProvider{
             fmt.Println("Deepseek API token successfully configured!")
             return nil
         },
-    },
-    "openai": {
+    }
+
+    providers["openai"] = LLMProvider{
         Name: "OpenAI",
         Setup: func() error {
             fmt.Println("Please create an OpenAI API account at:")
@@ -78,6 +68,6 @@ var providers = map[string]LLMProvider{
             fmt.Println("OpenAI API token successfully configured!")
             return nil
         },
-    },
+    }
     // Add other providers here...
 }

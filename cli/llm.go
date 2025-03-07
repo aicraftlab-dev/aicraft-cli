@@ -9,14 +9,6 @@ import (
     "github.com/spf13/cobra"
 )
 
-type LLMProvider struct {
-    Name    string
-    Setup   func() error
-    Connect func() error
-}
-
-var providers = make(map[string]LLMProvider)
-
 func loadProviders() error {
     // Get the absolute path to the providers directory
     providersDir := filepath.Join(filepath.Dir(os.Args[0]), "providers")
