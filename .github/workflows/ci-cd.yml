@@ -26,8 +26,9 @@ jobs:
     
     - name: Run tests with coverage
       run: |
-        go test -v -coverprofile=coverage.out -covermode=atomic -coverpkg=./... ./...
+        go test -v -coverprofile=coverage.out -covermode=atomic -coverpkg=./... ./... | tee test-output.log
         go tool cover -html=coverage.out -o coverage.html
+        cat test-output.log
     
     - name: Upload coverage
       uses: codecov/codecov-action@v3
