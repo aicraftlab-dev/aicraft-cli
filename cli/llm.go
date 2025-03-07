@@ -24,17 +24,29 @@ var providers = map[string]LLMProvider{
             fmt.Println("https://platform.deepseek.com/api-keys")
             return nil
         },
-    },
-    "openai": {
-        Name: "OpenAI",
-        Setup: func() error {
-            fmt.Println("Please create an OpenAI API account at:")
-            fmt.Println("https://platform.openai.com/signup")
-            fmt.Println("\nThen generate an API token at:")
-            fmt.Println("https://platform.openai.com/api-keys")
+        Connect: func() error {
+            fmt.Print("Enter your Deepseek API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["deepseek"] = ProviderConfig{
+                APIKey: token,
+                Model:  "deepseek-chat",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Deepseek API token successfully configured!")
             return nil
         },
     },
+    
     "anthropic": {
         Name: "Anthropic (Claude)",
         Setup: func() error {
@@ -42,6 +54,27 @@ var providers = map[string]LLMProvider{
             fmt.Println("https://www.anthropic.com/signup")
             fmt.Println("\nThen generate an API token at:")
             fmt.Println("https://console.anthropic.com/settings/keys")
+            return nil
+        },
+        Connect: func() error {
+            fmt.Print("Enter your Anthropic API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["anthropic"] = ProviderConfig{
+                APIKey: token,
+                Model:  "claude-2",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Anthropic API token successfully configured!")
             return nil
         },
     },
@@ -54,6 +87,27 @@ var providers = map[string]LLMProvider{
             fmt.Println("https://console.cloud.google.com/apis/credentials")
             return nil
         },
+        Connect: func() error {
+            fmt.Print("Enter your Google API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["google"] = ProviderConfig{
+                APIKey: token,
+                Model:  "gemini-pro",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Google API token successfully configured!")
+            return nil
+        },
     },
     "cohere": {
         Name: "Cohere",
@@ -62,6 +116,27 @@ var providers = map[string]LLMProvider{
             fmt.Println("https://dashboard.cohere.com/signup")
             fmt.Println("\nThen generate an API token at:")
             fmt.Println("https://dashboard.cohere.com/api-keys")
+            return nil
+        },
+        Connect: func() error {
+            fmt.Print("Enter your Cohere API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["cohere"] = ProviderConfig{
+                APIKey: token,
+                Model:  "command",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Cohere API token successfully configured!")
             return nil
         },
     },
@@ -74,6 +149,27 @@ var providers = map[string]LLMProvider{
             fmt.Println("https://huggingface.co/settings/tokens")
             return nil
         },
+        Connect: func() error {
+            fmt.Print("Enter your Hugging Face API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["huggingface"] = ProviderConfig{
+                APIKey: token,
+                Model:  "mistral-7b",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Hugging Face API token successfully configured!")
+            return nil
+        },
     },
     "ollama": {
         Name: "Local Ollama",
@@ -81,6 +177,27 @@ var providers = map[string]LLMProvider{
             fmt.Println("To use local Ollama, you'll need to:")
             fmt.Println("1. Install Ollama: https://github.com/jmorganca/ollama")
             fmt.Println("2. Run a model locally using: ollama run <model-name>")
+            return nil
+        },
+        Connect: func() error {
+            fmt.Print("Enter Ollama server address (default: http://localhost:11434): ")
+            var address string
+            fmt.Scanln(&address)
+            address = strings.TrimSpace(address)
+            
+            if address == "" {
+                address = "http://localhost:11434"
+            }
+            
+            // Store connection in config
+            config := loadConfig(configPath)
+            config.AI.Providers["ollama"] = ProviderConfig{
+                APIKey: address,
+                Model:  "llama2",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Ollama connection successfully configured!")
             return nil
         },
     },
