@@ -90,12 +90,15 @@ func saveConfig(path string, config Config) {
         return
     }
 
-    if err := os.MkdirAll(filepath.Dir(path), 0755); err != nil {
-        fmt.Printf("Error creating config directory: %v\n", err)
+    dir := filepath.Dir(path)
+    if err := os.MkdirAll(dir, 0755); err != nil {
+        fmt.Printf("Error creating config directory %s: %v\n", dir, err)
         return
     }
 
     if err := os.WriteFile(path, data, 0600); err != nil {
-        fmt.Printf("Error writing config: %v\n", err)
+        fmt.Printf("Error writing config to %s: %v\n", path, err)
+    } else {
+        fmt.Printf("Successfully wrote config to %s\n", path)
     }
 }
