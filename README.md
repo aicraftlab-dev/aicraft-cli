@@ -6,6 +6,22 @@ AICraft CLI is a powerful command-line interface for AI-augmented workflows, pro
 
 ## Installation
 
+### Quick Install
+
+#### Linux/macOS
+```bash
+curl -sSL https://raw.githubusercontent.com/aicraftlab-dev/aicraft-cli/main/install.sh | bash
+```
+
+#### Windows
+Run in PowerShell as Administrator:
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force
+iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/aicraftlab-dev/aicraft-cli/main/install.ps1'))
+```
+
+### Manual Installation
+
 ### From Releases
 1. Download the latest release for your platform from the [Releases page](https://github.com/aicraftlab-dev/aicraft-cli/releases)
 2. Make the binary executable:
