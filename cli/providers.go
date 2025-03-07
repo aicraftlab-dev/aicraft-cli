@@ -3,6 +3,8 @@ package cli
 import (
     "fmt"
     "strings"
+
+    "github.com/aicraftlab-dev/aicraft-cli/types"
 )
 
 func init() {
@@ -27,7 +29,7 @@ func init() {
             
             // Store token in config
             config := loadConfig(configPath)
-            config.AI.Providers["deepseek"] = ProviderConfig{
+            config.AI.Providers["deepseek"] = types.ProviderConfig{
                 APIKey: token,
                 Model:  "deepseek-chat",
             }
@@ -59,7 +61,7 @@ func init() {
             
             // Store token in config
             config := loadConfig(configPath)
-            config.AI.Providers["openai"] = ProviderConfig{
+            config.AI.Providers["openai"] = types.ProviderConfig{
                 APIKey: token,
                 Model:  "gpt-4",
             }
