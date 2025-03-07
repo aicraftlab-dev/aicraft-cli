@@ -29,8 +29,15 @@ func TestConfigSetup(t *testing.T) {
 
     // Verify config file
     config := loadConfig(configPath)
-    if config.AI.Providers["deepseek"].APIKey != "test-key" {
-        t.Errorf("Expected API key 'test-key', got %s", config.AI.Providers["deepseek"].APIKey)
+    if config.AI.Providers == nil {
+        t.Error("Expected providers map to be initialized")
+    }
+    provider, exists := config.AI.Providers["deepseek"]
+    if !exists {
+        t.Error("Expected deepseek provider to exist")
+    }
+    if provider.APIKey != "test-key" {
+        t.Errorf("Expected API key 'test-key', got %s", provider.APIKey)
     }
 }
 
