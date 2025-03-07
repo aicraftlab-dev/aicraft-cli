@@ -9,4 +9,5 @@ func InitRootCmd(rootCmd *cobra.Command) {
     rootCmd.AddCommand(NewCodeCmd())
     rootCmd.AddCommand(NewWebCmd())
     rootCmd.AddCommand(NewConfigCmd())
+    rootCmd.AddCommand(NewLLMCmd())
 }

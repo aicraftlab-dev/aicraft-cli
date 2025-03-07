@@ -50,6 +50,42 @@ iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercon
 
 ## Basic Usage
 
+### LLM Provider Configuration
+
+#### Setup Instructions
+Get setup instructions for a provider:
+```bash
+aicraft llm setup --provider deepseek
+aicraft llm setup --provider ollama
+```
+
+#### Connect to Provider
+Configure connection to a provider:
+```bash
+aicraft llm connect --provider deepseek
+aicraft llm connect --provider ollama
+```
+
+### Configuration
+
+#### AI Providers
+Configure AI providers (LLMs, image, video, TTS, STT, etc.):
+```bash
+aicraft config providers
+```
+
+#### Models
+Configure models for a specific provider:
+```bash
+aicraft config models --provider openai
+```
+
+#### Git
+Configure Git repositories:
+```bash
+aicraft config git
+```
+
 ### AI Operations
 Generate text using AI models:
 ```bash
