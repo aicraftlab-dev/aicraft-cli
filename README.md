@@ -6,6 +6,22 @@ AICraft CLI is a powerful command-line interface for AI-augmented workflows, pro
 
 ## Installation
 
+### Quick Install
+
+#### Linux/macOS
+```bash
+curl -sSL https://raw.githubusercontent.com/aicraftlab-dev/aicraft-cli/main/install.sh | bash
+```
+
+#### Windows
+Run in PowerShell as Administrator:
+```powershell
+Set-ExecutionPolicy Bypass -Scope Process -Force
+iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/aicraftlab-dev/aicraft-cli/main/install.ps1'))
+```
+
+### Manual Installation
+
 ### From Releases
 1. Download the latest release for your platform from the [Releases page](https://github.com/aicraftlab-dev/aicraft-cli/releases)
 2. Make the binary executable:
@@ -53,6 +69,33 @@ aicraft web search "Python async best practices" --engine google
 ```
 
 ## Configuration
+
+### Managing AI Providers
+Set up AI providers using the config command:
+```bash
+aicraft config setup --provider deepseek --api-key YOUR_API_KEY
+```
+
+### Configuration File
+The configuration is stored in `~/.aicraft/config.yaml`:
+```yaml
+ai:
+  providers:
+    deepseek:
+      api_key: YOUR_API_KEY
+      model: deepseek-chat
+  default_model: ollama:llama2
+sandbox:
+  timeout: 10s
+search:
+  default_engine: duckduckgo
+```
+
+### Environment Variables
+You can override configuration using environment variables:
+- `AICRAFT_AI_DEFAULT_MODEL`
+- `AICRAFT_SANDBOX_TIMEOUT`
+- `AICRAFT_SEARCH_DEFAULT_ENGINE`
 Create a config file at `~/.aicraft/config.yaml`:
 ```yaml
 ai:
