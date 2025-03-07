@@ -4,8 +4,6 @@ import (
     "os"
     "path/filepath"
     "testing"
-
-    "github.com/spf13/cobra"
 )
 
 func TestNewConfigCmd(t *testing.T) {
