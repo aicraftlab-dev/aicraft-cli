@@ -7,17 +7,14 @@ import (
 
     "github.com/spf13/cobra"
     "gopkg.in/yaml.v3"
+
+    "github.com/aicraftlab-dev/aicraft-cli/types"
 )
 
 type Config struct {
     AI struct {
-        Providers map[string]ProviderConfig `yaml:"providers"`
+        Providers map[string]types.ProviderConfig `yaml:"providers"`
     } `yaml:"ai"`
-}
-
-type ProviderConfig struct {
-    APIKey string `yaml:"api_key"`
-    Model  string `yaml:"model"`
 }
 
 func NewConfigCmd() *cobra.Command {
@@ -39,10 +36,10 @@ func NewConfigCmd() *cobra.Command {
             config := loadConfig(configPath)
             
             if config.AI.Providers == nil {
-                config.AI.Providers = make(map[string]ProviderConfig)
+                config.AI.Providers = make(map[string]types.ProviderConfig)
             }
 
-            config.AI.Providers[provider] = ProviderConfig{
+            config.AI.Providers[provider] = types.ProviderConfig{
                 APIKey: apiKey,
                 Model:  model,
             }
