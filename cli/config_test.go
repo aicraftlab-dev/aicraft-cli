@@ -41,6 +41,40 @@ func TestConfigSetup(t *testing.T) {
     }
 }
 
+func TestSaveConfig(t *testing.T) {
+    tempDir := t.TempDir()
+    configPath := filepath.Join(tempDir, "config.yaml")
+    
+    config := Config{
+        AI: struct {
+            Providers map[string]ProviderConfig `yaml:"providers"`
+        }{
+            Providers: map[string]ProviderConfig{
+                "test": {APIKey: "test-key"},
+            },
+        },
+    }
+    
+    saveConfig(configPath, config)
+    
+    if _, err := os.Stat(configPath); os.IsNotExist(err) {
+        t.Errorf("Config file was not created")
+    }
+}
+
+func TestLoadConfigInvalidFile(t *testing.T) {
+    tempDir := t.TempDir()
+    configPath := filepath.Join(tempDir, "config.yaml")
+    
+    // Create invalid YAML file
+    os.WriteFile(configPath, []byte("invalid: yaml: file"), 0644)
+    
+    config := loadConfig(configPath)
+    if config.AI.Providers != nil {
+        t.Error("Expected empty config for invalid file")
+    }
+}
+
 func TestLoadConfig(t *testing.T) {
     tempDir := t.TempDir()
     configPath := filepath.Join(tempDir, "config.yaml")
