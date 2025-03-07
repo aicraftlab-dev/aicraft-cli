@@ -59,16 +59,24 @@ jobs:
     - name: Build
       run: |
         GOOS=$(echo ${{ matrix.os }} | cut -d'-' -f1)
-        GOARCH=amd64
-        OUTPUT=aicraft-cli-${{ matrix.os }}-alpha
-        go build -o $OUTPUT .
-        echo "OUTPUT_FILE=$OUTPUT" >> $GITHUB_ENV
+        if [ "${{ matrix.os }}" == "macos-latest" ]; then
+          # Build for both Intel and Apple Silicon
+          GOARCH=amd64 OUTPUT=aicraft-cli-macos-intel-alpha go build -o aicraft-cli-macos-intel-alpha .
+          GOARCH=arm64 OUTPUT=aicraft-cli-macos-arm64-alpha go build -o aicraft-cli-macos-arm64-alpha .
+          echo "OUTPUT_FILES=aicraft-cli-macos-intel-alpha aicraft-cli-macos-arm64-alpha" >> $GITHUB_ENV
+        else
+          GOARCH=amd64
+          OUTPUT=aicraft-cli-${{ matrix.os }}-alpha
+          go build -o $OUTPUT .
+          echo "OUTPUT_FILES=$OUTPUT" >> $GITHUB_ENV
+        fi
     
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: aicraft-cli-${{ matrix.os }}-alpha
-        path: ${{ env.OUTPUT_FILE }}
+        path: |
+          ${{ env.OUTPUT_FILES }}
         retention-days: 5
 
   release:
