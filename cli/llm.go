@@ -24,6 +24,222 @@ var providers = map[string]LLMProvider{
             fmt.Println("https://platform.deepseek.com/api-keys")
             return nil
         },
+    },
+    "openai": {
+        Name: "OpenAI",
+        Setup: func() error {
+            fmt.Println("Please create an OpenAI API account at:")
+            fmt.Println("https://platform.openai.com/signup")
+            fmt.Println("\nThen generate an API token at:")
+            fmt.Println("https://platform.openai.com/api-keys")
+            return nil
+        },
+    },
+    "anthropic": {
+        Name: "Anthropic (Claude)",
+        Setup: func() error {
+            fmt.Println("Please create an Anthropic API account at:")
+            fmt.Println("https://www.anthropic.com/signup")
+            fmt.Println("\nThen generate an API token at:")
+            fmt.Println("https://console.anthropic.com/settings/keys")
+            return nil
+        },
+    },
+    "google": {
+        Name: "Google Gemini",
+        Setup: func() error {
+            fmt.Println("Please create a Google Cloud account at:")
+            fmt.Println("https://cloud.google.com/")
+            fmt.Println("\nThen enable the Gemini API and generate an API token at:")
+            fmt.Println("https://console.cloud.google.com/apis/credentials")
+            return nil
+        },
+    },
+    "cohere": {
+        Name: "Cohere",
+        Setup: func() error {
+            fmt.Println("Please create a Cohere API account at:")
+            fmt.Println("https://dashboard.cohere.com/signup")
+            fmt.Println("\nThen generate an API token at:")
+            fmt.Println("https://dashboard.cohere.com/api-keys")
+            return nil
+        },
+    },
+    "huggingface": {
+        Name: "Hugging Face",
+        Setup: func() error {
+            fmt.Println("Please create a Hugging Face account at:")
+            fmt.Println("https://huggingface.co/join")
+            fmt.Println("\nThen generate an API token at:")
+            fmt.Println("https://huggingface.co/settings/tokens")
+            return nil
+        },
+    },
+    "ollama": {
+        Name: "Local Ollama",
+        Setup: func() error {
+            fmt.Println("To use local Ollama, you'll need to:")
+            fmt.Println("1. Install Ollama: https://github.com/jmorganca/ollama")
+            fmt.Println("2. Run a model locally using: ollama run <model-name>")
+            return nil
+        },
+    },
+    "openai": {
+        Name: "OpenAI",
+        Setup: func() error {
+            fmt.Println("Please create an OpenAI API account at:")
+            fmt.Println("https://platform.openai.com/signup")
+            fmt.Println("\nThen generate an API token at:")
+            fmt.Println("https://platform.openai.com/api-keys")
+            return nil
+        },
+        Connect: func() error {
+            fmt.Print("Enter your OpenAI API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["openai"] = ProviderConfig{
+                APIKey: token,
+                Model:  "gpt-4",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("OpenAI API token successfully configured!")
+            return nil
+        },
+    },
+    "anthropic": {
+        Name: "Anthropic (Claude)",
+        Setup: func() error {
+            fmt.Println("Please create an Anthropic API account at:")
+            fmt.Println("https://www.anthropic.com/signup")
+            fmt.Println("\nThen generate an API token at:")
+            fmt.Println("https://console.anthropic.com/settings/keys")
+            return nil
+        },
+        Connect: func() error {
+            fmt.Print("Enter your Anthropic API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["anthropic"] = ProviderConfig{
+                APIKey: token,
+                Model:  "claude-2",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Anthropic API token successfully configured!")
+            return nil
+        },
+    },
+    "google": {
+        Name: "Google Gemini",
+        Setup: func() error {
+            fmt.Println("Please create a Google Cloud account at:")
+            fmt.Println("https://cloud.google.com/")
+            fmt.Println("\nThen enable the Gemini API and generate an API token at:")
+            fmt.Println("https://console.cloud.google.com/apis/credentials")
+            return nil
+        },
+        Connect: func() error {
+            fmt.Print("Enter your Google API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["google"] = ProviderConfig{
+                APIKey: token,
+                Model:  "gemini-pro",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Google API token successfully configured!")
+            return nil
+        },
+    },
+    "cohere": {
+        Name: "Cohere",
+        Setup: func() error {
+            fmt.Println("Please create a Cohere API account at:")
+            fmt.Println("https://dashboard.cohere.com/signup")
+            fmt.Println("\nThen generate an API token at:")
+            fmt.Println("https://dashboard.cohere.com/api-keys")
+            return nil
+        },
+        Connect: func() error {
+            fmt.Print("Enter your Cohere API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["cohere"] = ProviderConfig{
+                APIKey: token,
+                Model:  "command",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Cohere API token successfully configured!")
+            return nil
+        },
+    },
+    "huggingface": {
+        Name: "Hugging Face",
+        Setup: func() error {
+            fmt.Println("Please create a Hugging Face account at:")
+            fmt.Println("https://huggingface.co/join")
+            fmt.Println("\nThen generate an API token at:")
+            fmt.Println("https://huggingface.co/settings/tokens")
+            return nil
+        },
+        Connect: func() error {
+            fmt.Print("Enter your Hugging Face API token: ")
+            var token string
+            fmt.Scanln(&token)
+            token = strings.TrimSpace(token)
+            
+            if token == "" {
+                return fmt.Errorf("API token cannot be empty")
+            }
+            
+            // Store token in config
+            config := loadConfig(configPath)
+            config.AI.Providers["huggingface"] = ProviderConfig{
+                APIKey: token,
+                Model:  "mistral-7b",
+            }
+            saveConfig(configPath, config)
+            
+            fmt.Println("Hugging Face API token successfully configured!")
+            return nil
+        },
+    },
+}
         Connect: func() error {
             fmt.Print("Enter your Deepseek API token: ")
             var token string
