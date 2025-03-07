@@ -66,6 +66,26 @@ aicraft llm connect --provider deepseek
 aicraft llm connect --provider ollama
 ```
 
+### Configuration
+
+#### AI Providers
+Configure AI providers (LLMs, image, video, TTS, STT, etc.):
+```bash
+aicraft config providers
+```
+
+#### Models
+Configure models for a specific provider:
+```bash
+aicraft config models --provider openai
+```
+
+#### Git
+Configure Git repositories:
+```bash
+aicraft config git
+```
+
 ### AI Operations
 Generate text using AI models:
 ```bash
