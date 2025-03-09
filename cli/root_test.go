@@ -1,37 +1,37 @@
 package cli
 
 import (
-    "testing"
+	"testing"
 
-    "github.com/spf13/cobra"
+	"github.com/spf13/cobra"
 )
 
 func TestRootCommand(t *testing.T) {
-    rootCmd := &cobra.Command{}
-    InitRootCmd(rootCmd)
+	rootCmd := &cobra.Command{}
+	InitRootCmd(rootCmd)
 
-    if len(rootCmd.Commands()) != 4 {
-        t.Errorf("Expected 4 commands, got %d", len(rootCmd.Commands()))
-    }
+	if len(rootCmd.Commands()) != 4 {
+		t.Errorf("Expected 4 commands, got %d", len(rootCmd.Commands()))
+	}
 }
 
 func TestAICmd(t *testing.T) {
-    aiCmd := NewAICmd()
-    if aiCmd.Use != "ai" {
-        t.Errorf("Expected command use to be 'ai', got %s", aiCmd.Use)
-    }
+	aiCmd := NewAICmd()
+	if aiCmd.Use != "ai" {
+		t.Errorf("Expected command use to be 'ai', got %s", aiCmd.Use)
+	}
 }
 
 func TestCodeCmd(t *testing.T) {
-    codeCmd := NewCodeCmd()
-    if codeCmd.Use != "code" {
-        t.Errorf("Expected command use to be 'code', got %s", codeCmd.Use)
-    }
+	codeCmd := NewCodeCmd()
+	if codeCmd.Use != "code" {
+		t.Errorf("Expected command use to be 'code', got %s", codeCmd.Use)
+	}
 }
 
 func TestWebCmd(t *testing.T) {
-    webCmd := NewWebCmd()
-    if webCmd.Use != "web" {
-        t.Errorf("Expected command use to be 'web', got %s", webCmd.Use)
-    }
+	webCmd := NewWebCmd()
+	if webCmd.Use != "web" {
+		t.Errorf("Expected command use to be 'web', got %s", webCmd.Use)
+	}
 }

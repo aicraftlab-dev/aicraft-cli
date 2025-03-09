@@ -1,25 +1,25 @@
 package main
 
 import (
-    "fmt"
-    "os"
+	"fmt"
+	"os"
 
-    "github.com/aicraftlab-dev/aicraft-cli/cli"
-    "github.com/spf13/cobra"
+	"github.com/aicraftlab-dev/aicraft-cli/cli"
+	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-    Use:   "aicraft",
-    Short: "AICraft CLI - Unified AI Toolkit",
-    Long: `AICraft CLI provides a unified interface for AI inference,
-code execution, and web intelligence operations.`,
-}
-
 func main() {
-    cli.InitRootCmd(rootCmd)
-    
-    if err := rootCmd.Execute(); err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
+	var rootCmd = &cobra.Command{
+		Use:   "aicraft-cli",
+		Short: "aicraft-cli is a CLI for interacting with AI providers",
+		Long: `A command-line interface for interacting with various AI providers,
+                including LLM interactions, web intelligence, and code execution.`,
+	}
+
+	cli.InitRootCmd(rootCmd)
+
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }

@@ -1,103 +1,73 @@
 package cli
 
 import (
-    "fmt"
-    "os"
-    "path/filepath"
-    "plugin"
+	"fmt"
+	"os"
 
-    "github.com/spf13/cobra"
+	"github.com/aicraftlab-dev/aicraft-cli/types"
+	"github.com/spf13/cobra"
 )
 
-func loadProviders() error {
-    // Get the absolute path to the providers directory
-    providersDir := filepath.Join(filepath.Dir(os.Args[0]), "providers")
-    
-    // Read all .so files in the providers directory
-    files, err := filepath.Glob(filepath.Join(providersDir, "*.so"))
-    if err != nil {
-        return fmt.Errorf("failed to read providers directory: %v", err)
-    }
-
-    // Load each provider plugin
-    for _, file := range files {
-        p, err := plugin.Open(file)
-        if err != nil {
-            return fmt.Errorf("failed to load provider plugin %s: %v", file, err)
-        }
-
-        // Look up the provider symbol
-        providerSymbol, err := p.Lookup("Provider")
-        if err != nil {
-            return fmt.Errorf("failed to lookup provider symbol in %s: %v", file, err)
-        }
-
-        // Cast the symbol to LLMProvider
-        provider, ok := providerSymbol.(*LLMProvider)
-        if !ok {
-            return fmt.Errorf("invalid provider type in %s", file)
-        }
-
-        // Add the provider to the providers map
-        providers[provider.Name] = *provider
-    }
-
-    return nil
-}
-
 func NewLLMCmd() *cobra.Command {
-    var provider string
+	var prompt string
+	var configName string //Changed from providerName to configName
+	var modelName string
 
-    // Load providers dynamically
-    if err := loadProviders(); err != nil {
-        fmt.Printf("Error loading providers: %v\n", err)
-        os.Exit(1)
-    }
+	cmd := &cobra.Command{
+		Use:   "llm",
+		Short: "Interact with LLM providers",
+		Long:  `Send prompts to LLM providers and receive responses`,
+		Run: func(cmd *cobra.Command, args []string) {
+			config := loadConfig(configPath)
+			if config.Providers == nil {
+				fmt.Println("No provider configured. Run `aicraft config setup` first.")
+				os.Exit(1)
+			}
 
-    cmd := &cobra.Command{
-        Use:   "llm",
-        Short: "Configure LLM providers",
-        Long:  `Set up and connect to different LLM providers`,
-    }
+			var selectedProviderConfig types.ProviderConfig
+			var providerFound bool
+			var provider types.Provider
+			//Find the provider in the list of providers.
+			for _, providerConfig := range config.Providers {
+				if providerConfig.Name == configName {
+					selectedProviderConfig = providerConfig
+					// Now we use the provider name to look in the types.Providers map.
+					var ok bool
+					provider, ok = types.Providers[providerConfig.Provider]
+					if !ok {
+						fmt.Printf("Unknown provider: %s\n", providerConfig.Provider)
+						os.Exit(1)
+					}
+					providerFound = true
+					break
+				}
+			}
+			if !providerFound {
+				fmt.Printf("Configuration %s not found. Run `aicraft config setup`.\n", configName)
+				os.Exit(1)
+			}
 
-    setupCmd := &cobra.Command{
-        Use:   "setup",
-        Short: "Setup instructions for LLM provider",
-        Run: func(cmd *cobra.Command, args []string) {
-            p, exists := providers[provider]
-            if !exists {
-                fmt.Printf("Unknown provider: %s\n", provider)
-                return
-            }
+			var host string
+			if isOllamaConfig(selectedProviderConfig.Name) { //Now we use the name instead of provider.
+				host = selectedProviderConfig.Host
+			}
 
-            if err := p.Setup(); err != nil {
-                fmt.Printf("Error: %v\n", err)
-                os.Exit(1)
-            }
-        },
-    }
+			response, err := provider.Generate(modelName, prompt, selectedProviderConfig.APIKey, host)
+			if err != nil {
+				fmt.Printf("Error generating response: %v\n", err)
+				os.Exit(1)
+			}
 
-    connectCmd := &cobra.Command{
-        Use:   "connect",
-        Short: "Connect to LLM provider",
-        Run: func(cmd *cobra.Command, args []string) {
-            p, exists := providers[provider]
-            if !exists {
-                fmt.Printf("Unknown provider: %s\n", provider)
-                return
-            }
+			fmt.Println(response)
+		},
+	}
 
-            if err := p.Connect(); err != nil {
-                fmt.Printf("Error: %v\n", err)
-                os.Exit(1)
-            }
-        },
-    }
+	cmd.Flags().StringVarP(&configName, "config", "c", "", "Configuration name") //Change from provider to config
+	cmd.Flags().StringVarP(&modelName, "model", "m", "", "LLM model name")
+	cmd.Flags().StringVarP(&prompt, "prompt", "q", "", "Prompt to send to the model")
+	cmd.MarkFlagRequired("config") //changed from provider to config
+	cmd.MarkFlagRequired("model")
+	cmd.MarkFlagRequired("prompt")
 
-    setupCmd.Flags().StringVarP(&provider, "provider", "p", "", "LLM provider name")
-    connectCmd.Flags().StringVarP(&provider, "provider", "p", "", "LLM provider name")
-
-    cmd.AddCommand(setupCmd)
-    cmd.AddCommand(connectCmd)
-    return cmd
+	return cmd
 }
