@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"./config"
-	"./services"
+	"github.com/aicraftlab-dev/aicraft-cli/config"
+	"github.com/aicraftlab-dev/aicraft-cli/services"
 )
 
 func main() {
